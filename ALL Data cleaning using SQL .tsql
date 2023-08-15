@@ -1,0 +1,16 @@
+SELECT
+  SUBSTRING(client_id, 8, 20) AS client_id_clean, --isolating just the numbers in client_id 
+  LOWER(industry) AS industry,
+  CASE
+    WHEN LOWER(industry) = 'retail' THEN 'retail & consumer goods'
+    WHEN LOWER(industry) = 'consumer goods' THEN 'retail & consumer goods'
+    ELSE LOWER(industry)
+  END AS new_industry,
+  CASE
+    WHEN TRIM(LOWER(sector)) = 'consumers goods' THEN ' consumer goods'
+    ELSE LOWER(sector)
+  END AS new_sector,
+  REPLACE(region, '.', '') AS new_region,
+  Meta_clients.* --this will give us all the uncleaned and cleaned data all together
+FROM
+  meta_clients

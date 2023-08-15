@@ -1,0 +1,21 @@
+
+ --Standardizing the datasets by fixing client_id ,idustry ,sector and region
+--Three ways of isolating client just he numbers from client_id 
+SELECT
+  REPLACE(client_id, 'Client_', ' ')AS client_id_clean1 ,
+  SUBSTRING(client_id, 8, 20) AS client_id_clean2,
+  SUBSTRING(client_id,POSITION('_' in client_id)+1)AS client_id_clean3,
+  RIGHT(client_id,LENGTH(client_id)-7) AS client_id_clean4,
+  CASE
+    WHEN LOWER(industry) = 'retail' THEN 'consumer goods'
+    WHEN LOWER(industry) = 'consumer goods' THEN 'retail & consumer goods'
+    ELSE LOWER(industry)
+  END AS new_industry,
+  CASE
+    WHEN TRIM(LOWER(sector)) = 'consumers goods' THEN ' consumer goods'
+    ELSE LOWER(sector)
+  END AS new_sector,
+  REPLACE(region, '.', '') ||' - Europe' AS new_region,--Handling  missing data using concatination(||)
+  Meta_clients.*
+FROM
+  meta_clients
